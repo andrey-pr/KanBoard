@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<!--suppress HtmlFormInputWithoutLabel -->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Registration</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/registration.css' %}">
+</head>
+<body>
+<div>
+    <div class="container">
+        <h1>
+            Registration
+        </h1>
+        <form method="post" action="{% url 'registration' %}">
+            {% csrf_token %}
+            <input type="text" placeholder="Login" name="username" maxlength="150" required id="id_username">
+            <br>
+
+            <input type="email" placeholder="EMail" name="email" maxlength="254" required id="id_email">
+            <br>
+
+            <input type="password" placeholder="Password" name="password" required id="id_password">
+            <br>
+
+            <input type="submit" value="Register"/>
+            <input type="hidden" name="next" value="{{ next }}"/>
+        </form>
+        {% if form.errors %}
+            {% for error in form.username.errors %}
+                <p class="alert-text">Bad login</p>
+            {% endfor %}
+            {% for error in form.password.errors %}
+                <p class="alert-text">Bad password</p>
+            {% endfor %}
+            {% for error in form.email.errors %}
+                <p class="alert-text">Bad email address</p>
+            {% endfor %}
+        {% endif %}
+    </div>
+</div>
+
+</body>
+</html>

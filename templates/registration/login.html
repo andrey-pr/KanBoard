@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+</head>
+<body>
+<div class="container">
+    <form method="post" action="{% url 'login' %}">
+        <h1>Login</h1>
+        {% csrf_token %}
+        <input type="text" id="id_username" placeholder="Login" name="username">
+        <br>
+        <input type="password" id="id_password" placeholder="Password" name="password">
+        <br>
+        <input type="submit" value="Login"/>
+        <a href="{% url 'registration' %}" class="registration-link">Registration</a>
+        <input type="hidden" name="next" value="{{ next }}"/>
+    </form>
+</div>
+</body>
+</html>

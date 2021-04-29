@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>List of boards</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/boards_list.css' %}">
+    <link rel="stylesheet" href="{% static 'css/fontawesome.min.css' %}">
+</head>
+<body>
+<header class="header">
+    <div></div>
+    <img class="logo" src="{% static 'img/logo.svg' %}" alt="logo">
+    <a class="logout" href="{% url 'logout' %}?next={{ request.path }}">Logout</a>
+</header>
+<div class="container">
+    <ul id="boards-list" class="container-list">
+        {% for board in boards %}
+            <li class="board-list-item-container" data-id="{{ board.id }}">
+                <div class="board-list-item board">
+                    <div id="item-default-view-{{ board.id }}" class="visible-flex">
+                        <div class="title">
+                            <a href="{% url 'board' pk=board.id %}" class="no-underline">
+                                <span id="board-name-{{ board.id }}">
+                                    {{ board.name }}
+                                </span>
+                            </a>
+                            <button class="fa-white-button" onclick="changeViewToEdit('{{ board.id }}')">
+                                <i class="fas fa-pen"></i>
+                            </button>
+                        </div>
+                        <div class="description">
+                            <span id="board-description-{{ board.id }}">
+                                {{ board.description }}
+                            </span>
+                        </div>
+                    </div>
+                    <div id="item-edit-view-{{ board.id }}" class="invisible">
+                        <input type="text" style="width: 100%; box-sizing: border-box" id="edit-view-board-name-{{ board.id }}" value="{{ board.name }}">
+                        <input type="text" style="width: 100%; box-sizing: border-box" id="edit-view-board-description-{{ board.id }}" value="{{ board.description }}">
+                        <div style="display: flex; justify-content: space-between">
+                            <input type="button" class="enter-button"
+                                   value="Edit"
+                                   onclick="saveEdited('{{ board.id }}')"/>
+                            <button type="button"
+                                    class="fa-white-button"
+                                    onclick="changeViewToDefault('{{ board.id }}')">
+                                <i class="fas fa-times fa-2x"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        {% endfor %}
+        <li class="board-list-item-container">
+            <div id="create-board-button" class="board-list-item new-board-button visible-inline">Create new board</div>
+            <div id="create-board-button-active" class="board-list-item new-board-button-active invisible">
+                <input type="text" id="create-board-name-textbox" class="name-input"
+                       placeholder="Enter board name here..." maxlength="90"/>
+                <input type="text" id="create-board-description-textbox" class="description-input"
+                       placeholder="Enter board description here..." maxlength="1000"/>
+                <input type="button" id="create-board-create-button" class="enter-button" value="Create"/>
+                <button type="button" id="create-board-back-button" class="back-button" value="X">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </li>
+    </ul>
+</div>
+<script src="{% static 'js/boards_list.js' %}"></script>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>KanBoard</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/board.css' %}">
+    <link rel="stylesheet" href="{% static 'css/fontawesome.min.css' %}">
+    <script src="{% static 'js/Sortable.min.js' %}"></script>
+</head>
+<body data-id="{{ board.id }}">
+<header class="header">
+    <div class="board-controls-leftpad">
+        <a class="boards_link" href="{% url 'boards_list' %}">Boards</a>
+    </div>
+    <img class="logo" src="{% static 'img/logo.svg' %}">
+    <a class="delete-board-button" id="delete-board-button">
+        Delete board
+    </a>
+</header>
+<div class="main-container" id="main-container">
+    {% for column in columns %}
+        <div class="task-list-container" id="task-column-{{ column.id }}" data-id="{{ column.id }}">
+            <div class="task-list-title-container">
+                <div class="task-list-title-view-container visible-flex" id="col-name-view-{{ column.id }}">
+                    <div class="task-list-title" id="col-name-field-{{ column.id }}"> {{ column.name }} </div>
+                    <div>
+                        <button class="fa-grey-button" onclick="changeColumnViewToEdit('{{ column.id }}')">
+                            <i class="fas fa-pen"></i>
+                        </button>
+                        <button class="fa-grey-button" onclick="deleteColumn('{{ column.id }}')">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </div>
+                </div>
+                <div id="col-name-edit-view-{{ column.id }}" class="invisible">
+                    <input type="text" id="col-name-edit-field-{{ column.id }}" style="margin-right: 10px;">
+                    <div style="display: flex; flex-direction: column">
+                        <button class="fa-grey-button"
+                                onclick="saveEditedColumn('{{ column.id }}')">
+                            <i class="fas fa-check"></i>
+                        </button>
+                        <button class="fa-grey-button"
+                                onclick="changeColumnViewToDefault('{{ column.id }}')">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="task-list" id="task-list-{{ column.id }}" data-id="{{ column.id }}">
+                {% for task in column.task_set.all %}
+                    <div class="task-item" id="task-item-{{ task.id }}" data-id="{{ task.id }}">
+                        <div class="visible-flex" id="task-item-default-view-{{ task.id }}" style="display: flex; justify-content: space-between;">
+                            <div id="task-name-{{ task.id }}">{{ task.title }}</div>
+                            <div>
+                                <button class="fa-grey-button" onclick="changeTaskViewToEdit('{{ task.id }}')">
+                                    <i class="fas fa-pen"></i>
+                                </button>
+                                <button class="fa-grey-button" onclick="deleteTask('{{ task.id }}')">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="invisible" id="task-item-edit-view-{{ task.id }}" style="display: flex">
+                            <input style="width: auto" type="text" id="task-name-field-{{ task.id }}">
+                            <div style="display: flex; flex-direction: column">
+                                <button class="fa-grey-button"
+                                        onclick="saveEditedTask('{{ task.id }}')">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                                <button class="fa-grey-button"
+                                        onclick="changeTaskViewToDefault('{{ task.id }}')">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <button class="add-task-button visible-inline" id="add-task-button-{{ column.id }}" type="button"
+                    onclick="changeTaskViewToCreate('{{ column.id }}')">
+                <i class="fas fa-plus"></i>
+                Add another task
+            </button>
+            <div class="input-with-button-block invisible" id="add-task-button-active-{{ column.id }}">
+                <input type="text" placeholder="Enter a title for this card..." maxlength="120"
+                       id="create-task-title-{{ column.id }}"/>
+                <input type="button" class="enter-button" value="Create" data-column="{{ column.id }}"
+                       onclick="createTask('{{ column.id }}')"/>
+                <button class="back-button" onclick="changeTaskCreatingViewToDefault('{{ column.id }}')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+    {% endfor %}
+    <button id="add-column-button" type="button" class="create-list-button visible-inline">
+        <i class="fas fa-plus"></i>
+        Add another list
+    </button>
+
+    <div id="add-column-button-active" class="task-list-container invisible">
+        <div class="input-with-button-block">
+            <input type="text" id="create-column-name-textbox" placeholder="Enter a name for this column..."
+                   maxlength="120"/>
+            <input type="button" id="create-column-button" class="enter-button" value="Create"/>
+            <button id="add-column-back-button" class="back-button">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+</div>
+<script src="{% static 'js/board.js' %}"></script>
+</body>
+</html>
